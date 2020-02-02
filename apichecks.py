@@ -22,7 +22,7 @@ def create_check(request_config_obj):
         log(f'Checking {url}')
         response = requests.get(url, timeout=timeout)
         if response.status_code >= 400:
-          raise ApiException(url, 'API response with code >= 400')
+          raise ApiException(url, f'API response with code {response.status_code}')
         seconds_to_last_errors = 0
         log(f'{url} is OK')
       except Exception as e:
