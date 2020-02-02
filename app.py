@@ -22,10 +22,13 @@ def check_job():
       api_by_sec_check()
     except ApiException as e:
       for notification in notifications:
-        notification({
-          'url': e.url,
-          'error': str(e)
-        })
+        try:
+          notification({
+            'url': e.url,
+            'error': str(e)
+          })
+        except Exception as ne:
+          log(f'Notification failed: {str(ne)}')
 
 def parse_arguments():
   global api_by_sec_checks
