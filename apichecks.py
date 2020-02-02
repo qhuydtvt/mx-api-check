@@ -8,10 +8,12 @@ def create_check(request_config_obj):
   seconds_to_check = request_config_obj.get('checkEvery', 30)
   timeout = request_config_obj.get('timeOut', 10)
   seconds = 0
+  seconds_to_last_errors = 0
   def tick():
     nonlocal seconds
     nonlocal log
     nonlocal timeout
+    nonlocal seconds_to_last_errors
     seconds += 1
     print(f'{seconds_to_check - seconds} seconds to check {url}')
     if seconds >= seconds_to_check:
@@ -21,9 +23,19 @@ def create_check(request_config_obj):
         response = requests.get(url, timeout=timeout)
         if response.status_code >= 400:
           raise ApiException(url, 'API response with code >= 400')
+        seconds_to_last_errors = 0
+        log(f'{url} is OK')
       except Exception as e:
         log(f'{url} is NOT OK {str(e)}')
-        raise ApiException(url, message=str(e))
-      log(f'{url} is OK')
+        log(f'Seconds to last errors: {seconds_to_last_errors}')
+        should_raise_exception = False
+        if seconds_to_last_errors == 0:
+          should_raise_exception = True
+        seconds_to_last_errors += seconds_to_check
+        if seconds_to_last_errors >= 60:
+          seconds_to_last_errors = 0
+        if should_raise_exception:
+          log('Raising exception')
+          raise ApiException(url, message=str(e))
   
   return tick
