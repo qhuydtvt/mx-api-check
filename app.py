@@ -7,21 +7,24 @@ from utils import de_empty, read_json
 from apichecks import create_check
 from notifications import create_notification
 from exceptions.apichecks import ApiException
+from logger import setup_log, get_logger
 
 sched = BlockingScheduler()
 api_by_sec_checks = None
 notifications = None
+log = None
 
 @sched.scheduled_job('interval', seconds=1)
 def check_job():
-  print('This job is run every one seconds.')
+  print('Check job running...')
   for api_by_sec_check in api_by_sec_checks:
     try:
       api_by_sec_check()
-    except ApiException:
+    except ApiException as e:
       for notification in notifications:
         notification({
-          'error': True
+          'url': e.url,
+          'error': str(e)
         })
 
 def parse_arguments():
@@ -42,6 +45,12 @@ def parse_arguments():
     for noti_config in list(config_obj.get('notifications').items())
   ]
 
+def init_log():
+  global log
+  setup_log()
+  log = get_logger()
+
 if __name__ == "__main__":
+  init_log()
   parse_arguments()
   sched.start()
