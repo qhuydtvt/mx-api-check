@@ -4,3 +4,4 @@ config.json
 logs
 *.sh
 mx.api.check.plist
+.vscode
