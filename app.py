@@ -44,12 +44,12 @@ def parse_arguments():
   user_obj = Dict(user)
   print(user)
   api_by_sec_checks = [
-    # create_check(request_config)
-    # for request_config in config_obj.get('requests', [])
+    create_check(request_config)
+    for request_config in config_obj.get('requests', [])
   ]
   notifications = [
-    # create_notification(noti_config[0], noti_config[1])
-    # for noti_config in list(config_obj.get('notifications').items())
+    create_notification(noti_config[0], noti_config[1])
+    for noti_config in list(config_obj.get('notifications').items())
   ]
 
 def init_log():
