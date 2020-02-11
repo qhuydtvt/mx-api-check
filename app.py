@@ -4,6 +4,7 @@ import argparse
 import json
 from addict import Dict
 from utils import de_empty, read_json
+from crm_auth import authenticate
 from apichecks import create_check
 from notifications import create_notification
 from exceptions.apichecks import ApiException
@@ -39,13 +40,16 @@ def parse_arguments():
   config_url = de_empty(args.config, 'config.json')
   config = read_json(config_url)
   config_obj = Dict(config)
+  user = authenticate(config_obj.get('authentication'))
+  user_obj = Dict(user)
+  print(user)
   api_by_sec_checks = [
-    create_check(request_config)
-    for request_config in config_obj.get('requests', [])
+    # create_check(request_config)
+    # for request_config in config_obj.get('requests', [])
   ]
   notifications = [
-    create_notification(noti_config[0], noti_config[1])
-    for noti_config in list(config_obj.get('notifications').items())
+    # create_notification(noti_config[0], noti_config[1])
+    # for noti_config in list(config_obj.get('notifications').items())
   ]
 
 def init_log():
