@@ -4,5 +4,4 @@
   "python.formatting.autopep8Args": ["--indent-size=2"],
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
-  "python.pythonPath": "/Users/apps/anaconda3/bin/python"
 }
