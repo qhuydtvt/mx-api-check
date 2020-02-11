@@ -40,9 +40,9 @@ def parse_arguments():
   config_url = de_empty(args.config, 'config.json')
   config = read_json(config_url)
   config_obj = Dict(config)
-  user = authenticate(config_obj.get('authentication'))
-  user_obj = Dict(user)
-  print(user)
+  # user = authenticate(config_obj.get('authentication'))
+  # user_obj = Dict(user)
+  # print(user)
   api_by_sec_checks = [
     create_check(request_config)
     for request_config in config_obj.get('requests', [])
