@@ -6,19 +6,21 @@ from addict import Dict
 from utils import de_empty, read_json
 from crm_auth import authenticate
 from apichecks import create_check
+from queuecheck import create_queue_check
 from notifications import create_notification
 from exceptions.apichecks import ApiException
 from logger import setup_log, get_logger
 
 sched = BlockingScheduler()
-api_by_sec_checks = None
+api_by_sec_checks = []
+queue_by_sec_checks = []
 notifications = None
 log = None
 
 @sched.scheduled_job('interval', seconds=1)
 def check_job():
   print('Check job running...')
-  for api_by_sec_check in api_by_sec_checks:
+  for api_by_sec_check in api_by_sec_checks + queue_by_sec_checks:
     try:
       api_by_sec_check()
     except ApiException as e:
@@ -33,6 +35,7 @@ def check_job():
 
 def parse_arguments():
   global api_by_sec_checks
+  global queue_by_sec_checks
   global notifications
   parser = argparse.ArgumentParser()
   parser.add_argument('--config', help='Config file')
@@ -46,6 +49,10 @@ def parse_arguments():
   api_by_sec_checks = [
     create_check(request_config)
     for request_config in config_obj.get('requests', [])
+  ]
+  queue_by_sec_checks = [
+    create_queue_check(request_config)
+    for request_config in config_obj.get('queueUrls', [])
   ]
   notifications = [
     create_notification(noti_config[0], noti_config[1])
