@@ -30,7 +30,8 @@ def create_check(request_config_obj):
         if response.status_code >= 400:
           raise ApiException(url, f'API response with code {response.status_code}')
         seconds_to_last_errors = 0
-        log(f'{url} response: {response.text}')
+        response_text = response.text.encode('utf-8')
+        log(f'{url} response: {response_text}')
         log(f'{url} is OK')
       except Exception as e:
         log(f'{url} is NOT OK {str(e)}')
