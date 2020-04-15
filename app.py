@@ -11,7 +11,7 @@ from notifications import create_notification
 from exceptions.apichecks import ApiException
 from logger import setup_log, get_logger
 
-sched = BlockingScheduler()
+sched = BlockingScheduler(timezone='Asia/Ho_Chi_Minh')
 api_by_sec_checks = []
 queue_by_sec_checks = []
 notifications = None
