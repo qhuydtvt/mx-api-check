@@ -3,4 +3,4 @@ requests
 apscheduler
 addict
 python-dateutil
-kafka
+kafka-python
