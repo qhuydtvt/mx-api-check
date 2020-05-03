@@ -43,9 +43,6 @@ def parse_arguments():
   config_url = de_empty(args.config, 'config.json')
   config = read_json(config_url)
   config_obj = Dict(config)
-  # user = authenticate(config_obj.get('authentication'))
-  # user_obj = Dict(user)
-  # print(user)
   api_by_sec_checks = [
     create_check(request_config)
     for request_config in config_obj.get('requests', [])
@@ -59,9 +56,11 @@ def parse_arguments():
     for noti_config in list(config_obj.get('notifications').items())
   ]
 
-def init_log():
+  init_log(config_obj.log)
+
+def init_log(log_obj):
   global log
-  setup_log()
+  setup_log(log_obj)
   log = get_logger()
 
 if __name__ == "__main__":

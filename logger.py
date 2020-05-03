@@ -3,7 +3,11 @@ from datetime import datetime
 import sys
 import os
 
-def setup_log(logger_name='api-check'):
+def setup_log(config_obj):
+  enabled = config_obj.enabled
+  if not bool(enabled):
+    return
+  logger_name = config_obj.logger_name
   if not os.path.isdir('./logs'):
     os.mkdir('./logs')
 
