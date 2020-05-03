@@ -64,6 +64,5 @@ def init_log(log_obj):
   log = get_logger()
 
 if __name__ == "__main__":
-  init_log()
   parse_arguments()
   sched.start()
