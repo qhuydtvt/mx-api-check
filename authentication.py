@@ -8,6 +8,14 @@ class BearerAuth(requests.auth.AuthBase):
     r.headers['Authorization'] = 'Bearer ' + self.token
     return r
 
+class Auth(requests.auth.AuthBase):
+  def __init__(self, token):
+    self.token = token
+  
+  def __call__(self, r):
+    r.headers['Authorization'] = self.token
+    return r
+
 def get_firebase_token(firebase_url, credentials):
   try:
     firebase_response = requests.post(firebase_url, json=credentials)
@@ -23,5 +31,5 @@ def create_authentication(authentication_obj):
     def closure_firebase_token_auth():
       token = get_firebase_token(firebase_url, credentials)
       print(token)
-      return BearerAuth(token)
+      return Auth(token)
     return closure_firebase_token_auth
